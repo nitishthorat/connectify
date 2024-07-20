@@ -4,8 +4,8 @@ const generateToken = require("../config/generateToken")
 const bcrypt = require("bcrypt")
 
 const registerUser = asyncHandler(async (req, res) => {
-    var { name, email, pic } = req.body;
-    let {password} = req.body;
+    const { name, email, pic } = req.body;
+    var { password } = req.body
 
     if(!name || !email || !password) {
         res.status(400);
@@ -25,15 +25,13 @@ const registerUser = asyncHandler(async (req, res) => {
     const user = await User.create({
         name, email, password, pic
     })
-    console.log("After creation")
 
     if(user) {
         res.status(201).json({
             _id: user._id,
             name: user.name,
             email: user.email,
-            pic: user.pic,
-            token: generateToken(user._id)
+            pic: user.pic
         })
     } else {
         res.status(400)
@@ -43,7 +41,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const authUser = asyncHandler(async (req, res) => {
     const {email} = req.body;
-    let {password} = req.body;
+    var {password} = req.body;
 
     if(!email || !password) {
         res.status(400);
@@ -51,6 +49,7 @@ const authUser = asyncHandler(async (req, res) => {
     }
 
     const user = await User.findOne({email})
+    console.log(user)
 
     if(!user) {
         res.status(404)
@@ -58,10 +57,9 @@ const authUser = asyncHandler(async (req, res) => {
     }
 
     if(user) {
-        const salt = await bcrypt.genSalt(10)
-        password = await bcrypt.hash(password, salt)
+        const isMatch = await bcrypt.compare(password, user.password)
 
-        if (password = user.password) {
+        if (isMatch) {
             res.status(201).json({
                 _id: user._id,
                 name: user.name,
@@ -69,6 +67,8 @@ const authUser = asyncHandler(async (req, res) => {
                 pic: user.pic,
                 token: generateToken(user._id)
             })
+
+
         } else {
             res.status(401) 
             throw new Error("Password Incorrect")
@@ -76,4 +76,16 @@ const authUser = asyncHandler(async (req, res) => {
     }
 })
 
-module.exports = {registerUser, authUser}
+const allUsers = asyncHandler(async (req, res) => {
+    const keyword = req.query.search ? {
+        $or: [
+            { name: {$regex: req.query.search, $options: "i" }},
+            { email: {$regex: req.query.search, $options: "i" }}
+        ]
+    } : {}
+
+    const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+    res.send(users)
+})
+
+module.exports = {registerUser, authUser, allUsers}
