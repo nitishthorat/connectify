@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   InputGroup,
@@ -11,27 +11,34 @@ import {
   MenuList,
   Avatar,
   MenuItem,
-  MenuDivider,
+  VStack,
 } from "@chakra-ui/react";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { ChatState } from "../../Context/ChatProvider";
+import { UserContext } from "../../Context/UserProvider";
 import ProfileModal from "../../Miscellaneous/ProfileModal";
-import { useHistory } from "react-router-dom/cjs/react-router-dom";
+import { useNavigate } from "react-router-dom";
+import UserListItem from "./UserListItem";
+import { ChatContext } from "../../Context/ChatProvider";
 
 const SearchBox = () => {
-  // const [search, setSearch] = useState("");
-  // const [searchResult, setSearchResult] = useState([]);
-  // const [loading, setLoading] = useState(false);
-  // const [loadingChat, setLoadingChat] = useState(false);
+  const { user, searchUsersData, searchUsers } = useContext(UserContext);
+  const { accessChat } = useContext(ChatContext);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const navigate = useNavigate();
 
-  const { user } = ChatState();
-  const history = useHistory();
+  const onSearch = (search) => {
+    searchUsers(search);
+    setShowDropdown(true);
+  };
 
-  const onSearch = () => {};
+  const onItemClick = (userId) => {
+    setShowDropdown(false);
+    accessChat(userId);
+  };
 
   const logoutHandler = () => {
     localStorage.removeItem("userInfo");
-    history.push("/");
+    navigate("/");
   };
 
   return (
@@ -48,13 +55,42 @@ const SearchBox = () => {
         Connectify
       </Text>
       <InputGroup size="md" width="50%">
-        <Input pr="4.5rem" type="text" placeholder="Search Chats" />
+        <Input
+          pr="4.5rem"
+          type="text"
+          placeholder="Search Chats"
+          onChange={(e) => onSearch(e.target.value)}
+        />
         <InputRightElement width="4.5rem">
           <Button mr="8px" h="1.75rem" size="sm" onClick={onSearch}>
             Search
           </Button>
         </InputRightElement>
+        {showDropdown && (
+          <VStack
+            spacing={4}
+            align="stretch"
+            position="absolute"
+            width="100%"
+            top="46px"
+            gap="0px"
+            maxHeight="500px"
+            overflowY="scroll"
+            border="1px solid #E8E8E8"
+            padding="5px"
+            borderRadius="10px"
+          >
+            {searchUsersData.map((user) => (
+              <UserListItem
+                key={user._id}
+                user={user}
+                handleFunction={() => onItemClick(user._id)}
+              />
+            ))}
+          </VStack>
+        )}
       </InputGroup>
+
       <div>
         <Menu>
           <MenuButton p={1}>

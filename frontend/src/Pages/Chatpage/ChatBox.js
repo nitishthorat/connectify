@@ -1,7 +1,8 @@
 import React from "react";
+import { Box } from "@chakra-ui/react";
 
 const ChatBox = () => {
-  return <div>ChatBox</div>;
+  return <Box width="80%"></Box>;
 };
 
 export default ChatBox;

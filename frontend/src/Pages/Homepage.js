@@ -11,11 +11,8 @@ import {
 } from "@chakra-ui/react";
 import Login from "../components/Authentication/Login";
 import Signup from "../components/Authentication/Signup";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const Homepage = () => {
-  const history = useHistory();
-
   return (
     <Container maxW="xl" centerContent>
       <Box

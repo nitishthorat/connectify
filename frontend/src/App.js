@@ -1,13 +1,19 @@
-import { Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import "./App.scss";
 import Homepage from "./Pages/Homepage";
 import Chatpage from "./Pages/Chatpage/Chatpage";
+import ProtectedRoute from "./Miscellaneous/ProtectedRoute";
 
 function App() {
   return (
     <div className="App">
-      <Route path="/" component={Homepage} exact />
-      <Route path="/chats" component={Chatpage} />
+      <Routes>
+        <Route path="/" element={<Homepage />} exact />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/chats" element={<Chatpage />} />
+        </Route>
+      </Routes>
     </div>
   );
 }

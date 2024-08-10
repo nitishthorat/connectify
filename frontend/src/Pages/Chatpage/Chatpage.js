@@ -1,18 +1,29 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
 import { Box } from "@chakra-ui/react";
-import { ChatState } from "../../Context/ChatProvider";
+import { UserState } from "../../Context/UserProvider";
 import MyChats from "./MyChats";
 import ChatBox from "./ChatBox";
-import { useHistory } from "react-router-dom/cjs/react-router-dom";
 import SearchBox from "./SearchBox";
+import ChatProvider from "../../Context/ChatProvider";
 
 const Chatpage = () => {
-  const user = ChatState();
+  const user = UserState();
 
   return (
     <Box w="100%">
-      <SearchBox w="100%"></SearchBox>
+      <ChatProvider>
+        <SearchBox w="100%"></SearchBox>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          width="100%"
+          height="91.5vh"
+          padding="10px"
+        >
+          <MyChats></MyChats>
+          <ChatBox></ChatBox>
+        </Box>
+      </ChatProvider>
     </Box>
   );
 };
