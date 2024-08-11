@@ -54,19 +54,28 @@ const SearchBox = () => {
       <Text fontSize="2xl" fontFamily="Work sans">
         Connectify
       </Text>
-      <InputGroup size="md" width="50%">
+      <InputGroup size="md" width="30%">
         <Input
           pr="4.5rem"
           type="text"
-          placeholder="Search Chats"
+          placeholder="Search Users"
           onChange={(e) => onSearch(e.target.value)}
         />
-        <InputRightElement width="4.5rem">
-          <Button mr="8px" h="1.75rem" size="sm" onClick={onSearch}>
-            Search
-          </Button>
-        </InputRightElement>
         {showDropdown && (
+          <InputRightElement width="4.5rem">
+            <Button
+              mr="8px"
+              h="1.75rem"
+              size="sm"
+              onClick={() => {
+                setShowDropdown(false);
+              }}
+            >
+              Close
+            </Button>
+          </InputRightElement>
+        )}
+        {showDropdown && searchUsersData.length && (
           <VStack
             spacing={4}
             align="stretch"
@@ -88,6 +97,19 @@ const SearchBox = () => {
               />
             ))}
           </VStack>
+        )}
+        {showDropdown && !searchUsersData.length && (
+          <Box
+            position="absolute"
+            width="100%"
+            top="46px"
+            gap="0px"
+            border="1px solid #E8E8E8"
+            padding="5px"
+            borderRadius="10px"
+          >
+            No results found
+          </Box>
         )}
       </InputGroup>
 

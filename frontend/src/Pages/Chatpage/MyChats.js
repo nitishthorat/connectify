@@ -23,19 +23,23 @@ const MyChats = () => {
       {isLoading ? (
         <ChatLoading />
       ) : (
-        <Stack overflowY="scroll">
+        <Stack
+          overflowY="scroll"
+          spacing={4}
+          width="100%"
+          align="stretch"
+          gap="0px"
+        >
           {chatData?.map((chat) => (
             <Box
               onClick={() => setSelectedChat(chat)}
               cursor="pointer"
               bg={selectedChat === chat ? "38B2AC" : "E8E8E8"}
               color={selectedChat === chat ? "white" : "black"}
-              px={3}
-              py={2}
               borderRadius="lg"
               key={chat._id}
             >
-              <Text>{getSender(user.name, chat.users)}</Text>
+              <UserListItem key={user._id} user={user} padding="0px" />
             </Box>
             // <UserListItem
             //   key={user._id}
