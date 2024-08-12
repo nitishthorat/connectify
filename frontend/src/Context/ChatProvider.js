@@ -71,6 +71,7 @@ const ChatProvider = ({ children }) => {
         chatData,
         isLoading,
         accessChat,
+        fetchChats,
         selectedChat,
         setSelectedChat,
       }}

@@ -39,7 +39,11 @@ const MyChats = () => {
               borderRadius="lg"
               key={chat._id}
             >
-              <UserListItem key={user._id} user={user} padding="0px" />
+              <UserListItem
+                key={getSender(user, chat.users)._id}
+                user={getSender(user, chat.users)}
+                padding="0px"
+              />
             </Box>
             // <UserListItem
             //   key={user._id}

@@ -22,7 +22,7 @@ import { ChatContext } from "../../Context/ChatProvider";
 
 const SearchBox = () => {
   const { user, searchUsersData, searchUsers } = useContext(UserContext);
-  const { accessChat } = useContext(ChatContext);
+  const { accessChat, fetchChats } = useContext(ChatContext);
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
 
@@ -34,6 +34,7 @@ const SearchBox = () => {
   const onItemClick = (userId) => {
     setShowDropdown(false);
     accessChat(userId);
+    fetchChats();
   };
 
   const logoutHandler = () => {
