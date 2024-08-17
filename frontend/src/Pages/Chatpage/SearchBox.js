@@ -31,10 +31,11 @@ const SearchBox = () => {
     setShowDropdown(true);
   };
 
-  const onItemClick = (userId) => {
+  const onItemClick = async (user) => {
     setShowDropdown(false);
-    accessChat(userId);
-    fetchChats();
+    accessChat(user._id).then(() => {
+      fetchChats();
+    });
   };
 
   const logoutHandler = () => {
@@ -94,7 +95,7 @@ const SearchBox = () => {
               <UserListItem
                 key={user._id}
                 user={user}
-                handleFunction={() => onItemClick(user._id)}
+                handleFunction={() => onItemClick(user)}
               />
             ))}
           </VStack>

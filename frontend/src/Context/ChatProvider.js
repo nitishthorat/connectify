@@ -4,12 +4,8 @@ import axios from "axios";
 import { useContext } from "react";
 
 const authenticatedAxios = axios.create({
-  baseURL: "/api/", // Replace with your API base URL
+  baseURL: "/api/chat/", // Replace with your API base URL
 });
-
-const setBaseURL = (url) => {
-  authenticatedAxios.defaults.baseURL = url;
-};
 
 authenticatedAxios.interceptors.request.use(
   (request) => {
@@ -29,7 +25,7 @@ authenticatedAxios.interceptors.request.use(
 export const ChatContext = createContext(null);
 
 const ChatProvider = ({ children }) => {
-  const [chatData, setChatData] = useState();
+  const [chatData, setChatData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
   const [selectedChat, setSelectedChat] = useState();
@@ -38,7 +34,6 @@ const ChatProvider = ({ children }) => {
   const accessChat = async (userId) => {
     try {
       setLoadingChat(true);
-      setBaseURL("/api/chat");
 
       const { data } = await authenticatedAxios.post("/", { userId });
       setSelectedChat(data);
@@ -54,14 +49,23 @@ const ChatProvider = ({ children }) => {
         },
       };
 
-      setIsLoading(true);
+      if (!chatData.length) {
+        setIsLoading(true);
+      }
       const { data } = await axios.get(`/api/chat`, config);
       setChatData(data);
       setIsLoading(false);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const addNewChat = (chat) => {
+    setChatData(chatData.push(chat));
   };
 
   useEffect(() => {
+    console.log("Fetchchats");
     fetchChats();
   }, []);
 
@@ -74,6 +78,7 @@ const ChatProvider = ({ children }) => {
         fetchChats,
         selectedChat,
         setSelectedChat,
+        addNewChat,
       }}
     >
       {children}

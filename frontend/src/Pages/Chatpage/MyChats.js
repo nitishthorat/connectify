@@ -7,13 +7,13 @@ import { getSender } from "../../Miscellaneous/ChatLogics";
 import { UserContext } from "../../Context/UserProvider";
 
 const MyChats = () => {
-  const { chatData, isLoading, accessChat, selectedChat, setSelectedChat } =
+  const { chatData, isLoading, selectedChat, setSelectedChat } =
     useContext(ChatContext);
   const { user } = useContext(UserContext);
 
   return (
     <Box
-      width="20%"
+      width={{ base: "100%", md: "32%" }}
       display="flex"
       flexDir="column"
       p={3}
